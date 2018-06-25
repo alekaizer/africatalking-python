@@ -11,12 +11,9 @@
  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-"""
-    Python 3 Support
-    Achille AROUKO
-"""
 
 import urllib
+import urllib.parse
 import urllib.request
 import urllib.error
 import json
@@ -594,12 +591,13 @@ class AfricasTalkingGateway:
                 headers['authToken'] = authToken_
 
             if data_ is not None:
-                data = urllib.urlencode(data_)
+                data = json.dumps(data_).encode('utf8')
                 request = urllib.request.Request(urlString, data, headers=headers)
             else:
                 request = urllib.request.Request(urlString, headers=headers)
             response = urllib.request.urlopen(request)
         except urllib.error.HTTPError as e:
+            print("[ERROR]", e.read())
             raise AfricasTalkingGatewayException(e.read())
         else:
             self.responseCode = response.getcode()
